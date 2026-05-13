@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bilingual Math: Geometric Relations Discovery (Final Version)</title>
+    <title>Bilingual Math: Geometric Relations Discovery (Final Polish)</title>
     <style>
         :root { --primary: #2563eb; --success: #10b981; --accent: #f59e0b; --bg: #f8fafc; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; }
@@ -228,8 +228,9 @@
             txt.setAttribute("font-weight",weight); txt.setAttribute("font-size",size);
             txt.textContent = t; svg.appendChild(txt);
         };
-        addText("B", B.x-25, B.y+5, "#1e293b"); addText("A", A.x+5, A.y+20, "#1e293b"); 
-        addText("C", C.x-5, C.y-15, "#1e293b"); addText("B", B.x+40, B.y-10, "var(--accent)","italic","16");
+        addText("B", B.x-25, B.y+5, "#1e293b"); 
+        addText("A", A.x+5, A.y+20, "#1e293b"); 
+        addText("C", C.x-5, C.y-15, "#1e293b");
     }
 
     document.getElementById('d1-angle').addEventListener('input', updateD1);
