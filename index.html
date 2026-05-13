@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bilingual Math: Geometric Relations Discovery (Full Version)</title>
+    <title>Bilingual Math: Geometric Relations Discovery (Final Version)</title>
     <style>
         :root { --primary: #2563eb; --success: #10b981; --accent: #f59e0b; --bg: #f8fafc; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; }
@@ -28,10 +28,10 @@
 
         .puzzle-section { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; }
         .formula-line { margin: 12px 0; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .drop-box { width: 80px; height: 45px; border: 2px dashed var(--primary); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: #fff; cursor: pointer; transition: 0.2s; font-size: 0.9rem; color: #94a3b8; }
+        .drop-box { width: 85px; height: 45px; border: 2px dashed var(--primary); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: #fff; cursor: pointer; transition: 0.2s; font-size: 0.9rem; color: #94a3b8; }
         .drop-box.filled { border-style: solid; background: #dbeafe; color: var(--primary); font-weight: bold; }
         .item-bank { display: flex; gap: 8px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
-        .draggable-item { padding: 8px 15px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
+        .draggable-item { padding: 8px 15px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: 0.2s; }
         .draggable-item:hover { background: var(--primary); color: white; }
         .check-btn { margin-top: 20px; padding: 10px 30px; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
         
@@ -52,15 +52,15 @@
         <div class="panel">
             <h3>Worksheet: Theorem 1</h3>
             <p style="font-size: 0.8rem; color: #64748b;">Relate Hypotenuse (BC) to AC and AB.</p>
-            <label>Angle α: <span id="d1-angle-val">30</span>°</label>
+            <label>Angle B: <span id="d1-angle-val">30</span>°</label>
             <input type="range" id="d1-angle" min="15" max="75" value="30">
             <label>Hypotenuse BC: <span id="d1-bc-val">250</span></label>
             <input type="range" id="d1-bc" min="150" max="350" value="250">
             <div class="data-grid">
-                <div class="data-card"><div class="data-label">sin(α)</div><div class="data-value" id="v1-sin">0.500</div></div>
-                <div class="data-card"><div class="data-label">cos(α)</div><div class="data-value" id="v1-cos">0.866</div></div>
-                <div class="data-card" style="border-color: var(--success);"><div class="data-label">BC · sin(α)</div><div class="data-value" id="v1-bcs">125.0</div></div>
-                <div class="data-card" style="border-color: var(--success);"><div class="data-label">BC · cos(α)</div><div class="data-value" id="v1-bcc">216.5</div></div>
+                <div class="data-card"><div class="data-label">sin(B)</div><div class="data-value" id="v1-sin">0.500</div></div>
+                <div class="data-card"><div class="data-label">cos(B)</div><div class="data-value" id="v1-cos">0.866</div></div>
+                <div class="data-card" style="border-color: var(--success);"><div class="data-label">BC · sin(B)</div><div class="data-value" id="v1-bcs">125.0</div></div>
+                <div class="data-card" style="border-color: var(--success);"><div class="data-label">BC · cos(B)</div><div class="data-value" id="v1-bcc">216.5</div></div>
                 <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AC (Opp)</div><div class="data-value" id="v1-ac">125.0</div></div>
                 <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AB (Adj)</div><div class="data-value" id="v1-ab">216.5</div></div>
             </div>
@@ -75,16 +75,16 @@
                 <div class="draggable-item" onclick="fillBox('AB')">AB</div>
                 <div class="draggable-item" onclick="fillBox('AC')">AC</div>
                 <div class="draggable-item" onclick="fillBox('BC')">BC</div>
-                <div class="draggable-item" onclick="fillBox('sin(α)')">sin(α)</div>
-                <div class="draggable-item" onclick="fillBox('cos(α)')">cos(α)</div>
+                <div class="draggable-item" onclick="fillBox('sin(B)')">sin(B)</div>
+                <div class="draggable-item" onclick="fillBox('cos(B)')">cos(B)</div>
             </div>
             <button class="check-btn" onclick="checkPuzzle(1)">Check Theorem 1</button>
-            <p id="f1" style="font-weight: bold; margin-top: 10px;"></p>
+            <p id="f1" style="font-weight: bold; margin-top: 10px; text-align: center;"></p>
         </div>
         <div class="puzzle-section">
             <div class="canvas-area" style="min-height: 200px; border: none;"><svg id="svg-p1" width="400" height="200"></svg></div>
-            <div class="formula-line">sin(α) = <div class="drop-box" id="p1_1" onclick="selectBox('p1_1')">?</div> / <div class="drop-box" id="p1_2" onclick="selectBox('p1_2')">?</div></div>
-            <div class="formula-line">cos(α) = <div class="drop-box" id="p1_3" onclick="selectBox('p1_3')">?</div> / <div class="drop-box" id="p1_4" onclick="selectBox('p1_4')">?</div></div>
+            <div class="formula-line">sin(B) = <div class="drop-box" id="p1_1" onclick="selectBox('p1_1')">?</div> / <div class="drop-box" id="p1_2" onclick="selectBox('p1_2')">?</div></div>
+            <div class="formula-line">cos(B) = <div class="drop-box" id="p1_3" onclick="selectBox('p1_3')">?</div> / <div class="drop-box" id="p1_4" onclick="selectBox('p1_4')">?</div></div>
             <hr>
             <div class="formula-line">AC = <div class="drop-box" id="p1_5" onclick="selectBox('p1_5')">?</div> × <div class="drop-box" id="p1_6" onclick="selectBox('p1_6')">?</div></div>
             <div class="formula-line">AB = <div class="drop-box" id="p1_7" onclick="selectBox('p1_7')">?</div> × <div class="drop-box" id="p1_8" onclick="selectBox('p1_8')">?</div></div>
@@ -95,15 +95,15 @@
         <div class="panel">
             <h3>Worksheet: Theorem 2</h3>
             <p style="font-size: 0.8rem; color: #64748b;">Relate Adjacent Side (AB) to Opposite Side (AC).</p>
-            <label>Angle α: <span id="d2-angle-val">30</span>°</label>
+            <label>Angle B: <span id="d2-angle-val">30</span>°</label>
             <input type="range" id="d2-angle" min="15" max="75" value="30">
             <label>Adjacent AB: <span id="d2-ab-val">200</span></label>
             <input type="range" id="d2-ab" min="100" max="300" value="200">
             <div class="data-grid">
-                <div class="data-card"><div class="data-label">tan(α)</div><div class="data-value" id="v2-tan">0.577</div></div>
-                <div class="data-card"><div class="data-label">cot(α)</div><div class="data-value" id="v2-cot">1.732</div></div>
-                <div class="data-card" style="border-color: var(--success);"><div class="data-label">AB · tan(α)</div><div class="data-value" id="v2-abt">115.5</div></div>
-                <div class="data-card" style="border-color: var(--success);"><div class="data-label">AC / tan(α)</div><div class="data-value" id="v2-act">200.0</div></div>
+                <div class="data-card"><div class="data-label">tan(B)</div><div class="data-value" id="v2-tan">0.577</div></div>
+                <div class="data-card"><div class="data-label">cot(B)</div><div class="data-value" id="v2-cot">1.732</div></div>
+                <div class="data-card" style="border-color: var(--success);"><div class="data-label">AB · tan(B)</div><div class="data-value" id="v2-abt">115.5</div></div>
+                <div class="data-card" style="border-color: var(--success);"><div class="data-label">AC · cot(B)</div><div class="data-value" id="v2-act">200.0</div></div>
                 <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AC (Opp)</div><div class="data-value" id="v2-ac">115.5</div></div>
                 <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AB (Adj)</div><div class="data-value" id="v2-ab">200.0</div></div>
             </div>
@@ -117,16 +117,17 @@
             <div class="item-bank">
                 <div class="draggable-item" onclick="fillBox('AB')">AB</div>
                 <div class="draggable-item" onclick="fillBox('AC')">AC</div>
-                <div class="draggable-item" onclick="fillBox('tan(α)')">tan(α)</div>
-                <div class="draggable-item" onclick="fillBox('cot(α)')">cot(α)</div>
+                <div class="draggable-item" onclick="fillBox('BC')">BC</div>
+                <div class="draggable-item" onclick="fillBox('tan(B)')">tan(B)</div>
+                <div class="draggable-item" onclick="fillBox('cot(B)')">cot(B)</div>
             </div>
             <button class="check-btn" onclick="checkPuzzle(2)">Check Theorem 2</button>
-            <p id="f2" style="font-weight: bold; margin-top: 10px;"></p>
+            <p id="f2" style="font-weight: bold; margin-top: 10px; text-align: center;"></p>
         </div>
         <div class="puzzle-section">
             <div class="canvas-area" style="min-height: 200px; border: none;"><svg id="svg-p2" width="400" height="200"></svg></div>
-            <div class="formula-line">tan(α) = <div class="drop-box" id="p2_1" onclick="selectBox('p2_1')">?</div> / <div class="drop-box" id="p2_2" onclick="selectBox('p2_2')">?</div></div>
-            <div class="formula-line">cot(α) = <div class="drop-box" id="p2_3" onclick="selectBox('p2_3')">?</div> / <div class="drop-box" id="p2_4" onclick="selectBox('p2_4')">?</div></div>
+            <div class="formula-line">tan(B) = <div class="drop-box" id="p2_1" onclick="selectBox('p2_1')">?</div> / <div class="drop-box" id="p2_2" onclick="selectBox('p2_2')">?</div></div>
+            <div class="formula-line">cot(B) = <div class="drop-box" id="p2_3" onclick="selectBox('p2_3')">?</div> / <div class="drop-box" id="p2_4" onclick="selectBox('p2_4')">?</div></div>
             <hr>
             <div class="formula-line">AC = <div class="drop-box" id="p2_5" onclick="selectBox('p2_5')">?</div> × <div class="drop-box" id="p2_6" onclick="selectBox('p2_6')">?</div></div>
             <div class="formula-line">AB = <div class="drop-box" id="p2_7" onclick="selectBox('p2_7')">?</div> × <div class="drop-box" id="p2_8" onclick="selectBox('p2_8')">?</div></div>
@@ -186,8 +187,8 @@
 
     function checkPuzzle(num) {
         const ans = num === 1 ? 
-            {p1_1:"AC",p1_2:"BC",p1_3:"AB",p1_4:"BC",p1_5:"BC",p1_6:"sin(α)",p1_7:"BC",p1_8:"cos(α)"} :
-            {p2_1:"AC",p2_2:"AB",p2_3:"AB",p2_4:"AC",p2_5:"AB",p2_6:"tan(α)",p2_7:"AC",p2_8:"cot(α)"};
+            {p1_1:"AC",p1_2:"BC",p1_3:"AB",p1_4:"BC",p1_5:"BC",p1_6:"sin(B)",p1_7:"BC",p1_8:"cos(B)"} :
+            {p2_1:"AC",p2_2:"AB",p2_3:"AB",p2_4:"AC",p2_5:"AB",p2_6:"tan(B)",p2_7:"AC",p2_8:"cot(B)"};
         
         let correct = true;
         for(let key in ans) {
@@ -202,7 +203,7 @@
 
     function drawTriangle(id, ab, ac, alpha, originY) {
         const svg = document.getElementById(id); svg.innerHTML = '';
-        const originX = 70, B = {x:originX, y:originY}, A = {x:B.x+ab, y:B.y}, C = {x:A.x, y:B.y-ac};
+        const originX = 75, B = {x:originX, y:originY}, A = {x:B.x+ab, y:B.y}, C = {x:A.x, y:B.y-ac};
         const drawLine = (p1, p2, col) => {
             const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
             l.setAttribute("x1",p1.x); l.setAttribute("y1",p1.y); l.setAttribute("x2",p2.x); l.setAttribute("y2",p2.y);
@@ -228,7 +229,7 @@
             txt.textContent = t; svg.appendChild(txt);
         };
         addText("B", B.x-25, B.y+5, "#1e293b"); addText("A", A.x+5, A.y+20, "#1e293b"); 
-        addText("C", C.x-5, C.y-15, "#1e293b"); addText("α", B.x+40, B.y-10, "var(--accent)","italic","16");
+        addText("C", C.x-5, C.y-15, "#1e293b"); addText("B", B.x+40, B.y-10, "var(--accent)","italic","16");
     }
 
     document.getElementById('d1-angle').addEventListener('input', updateD1);
