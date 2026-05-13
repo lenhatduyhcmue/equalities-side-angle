@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilingual Math: Geometric Relations Discovery (Full Version)</title>
+    <style>
+        :root { --primary: #2563eb; --success: #10b981; --accent: #f59e0b; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; }
+        
+        .tabs { display: flex; background: #e2e8f0; border-bottom: 2px solid #cbd5e1; flex-wrap: wrap; }
+        .tab-btn { flex: 1; min-width: 150px; padding: 15px; border: none; background: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.3s; color: #64748b; }
+        .tab-btn.active { background: white; color: var(--primary); border-bottom: 3px solid var(--primary); }
+        
+        .content { padding: 30px; display: none; }
+        .content.active { display: grid; grid-template-columns: 380px 1fr; gap: 30px; }
+
+        .panel { background: #f1f5f9; padding: 20px; border-radius: 0.75rem; display: flex; flex-direction: column; gap: 10px; }
+        .canvas-area { display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed #cbd5e1; border-radius: 0.75rem; min-height: 450px; position: relative; background: #fff; }
+        label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.85rem; }
+        input[type="range"] { width: 100%; cursor: pointer; }
+
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .data-card { background: white; padding: 10px; border-radius: 5px; border-left: 4px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .data-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        .data-value { font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.1rem; color: #1e293b; }
+
+        .puzzle-section { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .formula-line { margin: 12px 0; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .drop-box { width: 80px; height: 45px; border: 2px dashed var(--primary); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: #fff; cursor: pointer; transition: 0.2s; font-size: 0.9rem; color: #94a3b8; }
+        .drop-box.filled { border-style: solid; background: #dbeafe; color: var(--primary); font-weight: bold; }
+        .item-bank { display: flex; gap: 8px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
+        .draggable-item { padding: 8px 15px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
+        .draggable-item:hover { background: var(--primary); color: white; }
+        .check-btn { margin-top: 20px; padding: 10px 30px; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        
+        hr { width: 100%; border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'd1')">1. Discovery (Th.1)</button>
+        <button class="tab-btn" onclick="openTab(event, 'p1')">2. Formation (Th.1)</button>
+        <button class="tab-btn" onclick="openTab(event, 'd2')">3. Discovery (Th.2)</button>
+        <button class="tab-btn" onclick="openTab(event, 'p2')">4. Formation (Th.2)</button>
+    </div>
+
+    <div id="d1" class="content active">
+        <div class="panel">
+            <h3>Worksheet: Theorem 1</h3>
+            <p style="font-size: 0.8rem; color: #64748b;">Relate Hypotenuse (BC) to AC and AB.</p>
+            <label>Angle α: <span id="d1-angle-val">30</span>°</label>
+            <input type="range" id="d1-angle" min="15" max="75" value="30">
+            <label>Hypotenuse BC: <span id="d1-bc-val">250</span></label>
+            <input type="range" id="d1-bc" min="150" max="350" value="250">
+            <div class="data-grid">
+                <div class="data-card"><div class="data-label">sin(α)</div><div class="data-value" id="v1-sin">0.500</div></div>
+                <div class="data-card"><div class="data-label">cos(α)</div><div class="data-value" id="v1-cos">0.866</div></div>
+                <div class="data-card" style="border-color: var(--success);"><div class="data-label">BC · sin(α)</div><div class="data-value" id="v1-bcs">125.0</div></div>
+                <div class="data-card" style="border-color: var(--success);"><div class="data-label">BC · cos(α)</div><div class="data-value" id="v1-bcc">216.5</div></div>
+                <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AC (Opp)</div><div class="data-value" id="v1-ac">125.0</div></div>
+                <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AB (Adj)</div><div class="data-value" id="v1-ab">216.5</div></div>
+            </div>
+        </div>
+        <div class="canvas-area"><svg id="svg-d1" width="500" height="400"></svg></div>
+    </div>
+
+    <div id="p1" class="content">
+        <div class="panel">
+            <h3>Item Bank (Th.1)</h3>
+            <div class="item-bank" id="bank1">
+                <div class="draggable-item" onclick="fillBox('AB')">AB</div>
+                <div class="draggable-item" onclick="fillBox('AC')">AC</div>
+                <div class="draggable-item" onclick="fillBox('BC')">BC</div>
+                <div class="draggable-item" onclick="fillBox('sin(α)')">sin(α)</div>
+                <div class="draggable-item" onclick="fillBox('cos(α)')">cos(α)</div>
+            </div>
+            <button class="check-btn" onclick="checkPuzzle(1)">Check Theorem 1</button>
+            <p id="f1" style="font-weight: bold; margin-top: 10px;"></p>
+        </div>
+        <div class="puzzle-section">
+            <div class="canvas-area" style="min-height: 200px; border: none;"><svg id="svg-p1" width="400" height="200"></svg></div>
+            <div class="formula-line">sin(α) = <div class="drop-box" id="p1_1" onclick="selectBox('p1_1')">?</div> / <div class="drop-box" id="p1_2" onclick="selectBox('p1_2')">?</div></div>
+            <div class="formula-line">cos(α) = <div class="drop-box" id="p1_3" onclick="selectBox('p1_3')">?</div> / <div class="drop-box" id="p1_4" onclick="selectBox('p1_4')">?</div></div>
+            <hr>
+            <div class="formula-line">AC = <div class="drop-box" id="p1_5" onclick="selectBox('p1_5')">?</div> × <div class="drop-box" id="p1_6" onclick="selectBox('p1_6')">?</div></div>
+            <div class="formula-line">AB = <div class="drop-box" id="p1_7" onclick="selectBox('p1_7')">?</div> × <div class="drop-box" id="p1_8" onclick="selectBox('p1_8')">?</div></div>
+        </div>
+    </div>
+
+    <div id="d2" class="content">
+        <div class="panel">
+            <h3>Worksheet: Theorem 2</h3>
+            <p style="font-size: 0.8rem; color: #64748b;">Relate Adjacent Side (AB) to Opposite Side (AC).</p>
+            <label>Angle α: <span id="d2-angle-val">30</span>°</label>
+            <input type="range" id="d2-angle" min="15" max="75" value="30">
+            <label>Adjacent AB: <span id="d2-ab-val">200</span></label>
+            <input type="range" id="d2-ab" min="100" max="300" value="200">
+            <div class="data-grid">
+                <div class="data-card"><div class="data-label">tan(α)</div><div class="data-value" id="v2-tan">0.577</div></div>
+                <div class="data-card"><div class="data-label">cot(α)</div><div class="data-value" id="v2-cot">1.732</div></div>
+                <div class="data-card" style="border-color: var(--success);"><div class="data-label">AB · tan(α)</div><div class="data-value" id="v2-abt">115.5</div></div>
+                <div class="data-card" style="border-color: var(--success);"><div class="data-label">AC / tan(α)</div><div class="data-value" id="v2-act">200.0</div></div>
+                <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AC (Opp)</div><div class="data-value" id="v2-ac">115.5</div></div>
+                <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AB (Adj)</div><div class="data-value" id="v2-ab">200.0</div></div>
+            </div>
+        </div>
+        <div class="canvas-area"><svg id="svg-d2" width="500" height="400"></svg></div>
+    </div>
+
+    <div id="p2" class="content">
+        <div class="panel">
+            <h3>Item Bank (Th.2)</h3>
+            <div class="item-bank">
+                <div class="draggable-item" onclick="fillBox('AB')">AB</div>
+                <div class="draggable-item" onclick="fillBox('AC')">AC</div>
+                <div class="draggable-item" onclick="fillBox('tan(α)')">tan(α)</div>
+                <div class="draggable-item" onclick="fillBox('cot(α)')">cot(α)</div>
+            </div>
+            <button class="check-btn" onclick="checkPuzzle(2)">Check Theorem 2</button>
+            <p id="f2" style="font-weight: bold; margin-top: 10px;"></p>
+        </div>
+        <div class="puzzle-section">
+            <div class="canvas-area" style="min-height: 200px; border: none;"><svg id="svg-p2" width="400" height="200"></svg></div>
+            <div class="formula-line">tan(α) = <div class="drop-box" id="p2_1" onclick="selectBox('p2_1')">?</div> / <div class="drop-box" id="p2_2" onclick="selectBox('p2_2')">?</div></div>
+            <div class="formula-line">cot(α) = <div class="drop-box" id="p2_3" onclick="selectBox('p2_3')">?</div> / <div class="drop-box" id="p2_4" onclick="selectBox('p2_4')">?</div></div>
+            <hr>
+            <div class="formula-line">AC = <div class="drop-box" id="p2_5" onclick="selectBox('p2_5')">?</div> × <div class="drop-box" id="p2_6" onclick="selectBox('p2_6')">?</div></div>
+            <div class="formula-line">AB = <div class="drop-box" id="p2_7" onclick="selectBox('p2_7')">?</div> × <div class="drop-box" id="p2_8" onclick="selectBox('p2_8')">?</div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let activeBoxId = null;
+
+    function openTab(evt, tabName) {
+        document.querySelectorAll(".content").forEach(c => c.classList.remove("active"));
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+
+        if(tabName === 'd1') updateD1();
+        if(tabName === 'd2') updateD2();
+        if(tabName === 'p1') drawTriangle('svg-p1', 160, 100, 32, 170);
+        if(tabName === 'p2') drawTriangle('svg-p2', 160, 100, 32, 170);
+    }
+
+    function updateD1() {
+        const a = parseInt(document.getElementById('d1-angle').value), bc = parseInt(document.getElementById('d1-bc').value);
+        const rad = a * Math.PI/180, s = Math.sin(rad), c = Math.cos(rad);
+        const ac = bc * s, ab = bc * c;
+        document.getElementById('d1-angle-val').innerText = a; document.getElementById('d1-bc-val').innerText = bc;
+        document.getElementById('v1-sin').innerText = s.toFixed(3); document.getElementById('v1-cos').innerText = c.toFixed(3);
+        document.getElementById('v1-bcs').innerText = ac.toFixed(1); document.getElementById('v1-bcc').innerText = ab.toFixed(1);
+        document.getElementById('v1-ac').innerText = ac.toFixed(1); document.getElementById('v1-ab').innerText = ab.toFixed(1);
+        drawTriangle('svg-d1', ab, ac, a, 350);
+    }
+
+    function updateD2() {
+        const a = parseInt(document.getElementById('d2-angle').value), ab = parseInt(document.getElementById('d2-ab').value);
+        const rad = a * Math.PI/180, t = Math.tan(rad), co = 1/t;
+        const ac = ab * t;
+        document.getElementById('d2-angle-val').innerText = a; document.getElementById('d2-ab-val').innerText = ab;
+        document.getElementById('v2-tan').innerText = t.toFixed(3); document.getElementById('v2-cot').innerText = co.toFixed(3);
+        document.getElementById('v2-abt').innerText = ac.toFixed(1); document.getElementById('v2-act').innerText = ab.toFixed(1);
+        document.getElementById('v2-ac').innerText = ac.toFixed(1); document.getElementById('v2-ab').innerText = ab.toFixed(1);
+        drawTriangle('svg-d2', ab, ac, a, 350);
+    }
+
+    function selectBox(id) {
+        if(activeBoxId) document.getElementById(activeBoxId).style.borderColor = "var(--primary)";
+        activeBoxId = id; document.getElementById(id).style.borderColor = "var(--accent)";
+    }
+
+    function fillBox(val) {
+        if(activeBoxId) {
+            const b = document.getElementById(activeBoxId);
+            b.innerText = val; b.classList.add('filled');
+            activeBoxId = null; b.style.borderColor = "var(--primary)";
+        }
+    }
+
+    function checkPuzzle(num) {
+        const ans = num === 1 ? 
+            {p1_1:"AC",p1_2:"BC",p1_3:"AB",p1_4:"BC",p1_5:"BC",p1_6:"sin(α)",p1_7:"BC",p1_8:"cos(α)"} :
+            {p2_1:"AC",p2_2:"AB",p2_3:"AB",p2_4:"AC",p2_5:"AB",p2_6:"tan(α)",p2_7:"AC",p2_8:"cot(α)"};
+        
+        let correct = true;
+        for(let key in ans) {
+            const b = document.getElementById(key);
+            if(b.innerText !== ans[key]) { b.style.backgroundColor = "#fee2e2"; correct = false; }
+            else b.style.backgroundColor = "#dcfce7";
+        }
+        const f = document.getElementById('f'+num);
+        f.innerText = correct ? "Correct!" : "Try again!";
+        f.style.color = correct ? "var(--success)" : "var(--accent)";
+    }
+
+    function drawTriangle(id, ab, ac, alpha, originY) {
+        const svg = document.getElementById(id); svg.innerHTML = '';
+        const originX = 70, B = {x:originX, y:originY}, A = {x:B.x+ab, y:B.y}, C = {x:A.x, y:B.y-ac};
+        const drawLine = (p1, p2, col) => {
+            const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            l.setAttribute("x1",p1.x); l.setAttribute("y1",p1.y); l.setAttribute("x2",p2.x); l.setAttribute("y2",p2.y);
+            l.setAttribute("stroke",col); l.setAttribute("stroke-width",3); svg.appendChild(l);
+        };
+        drawLine(B,A,"#334155"); drawLine(A,C,"#10b981"); drawLine(B,C,"#ef4444");
+        const raSize = 15;
+        const ra = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        ra.setAttribute("points", `${A.x-raSize},${A.y} ${A.x-raSize},${A.y-raSize} ${A.x},${A.y-raSize}`);
+        ra.setAttribute("fill","none"); ra.setAttribute("stroke","#94a3b8"); svg.appendChild(ra);
+
+        const arcR = 35, rad = alpha * Math.PI/180;
+        const ex = B.x + arcR * Math.cos(-rad), ey = B.y + arcR * Math.sin(-rad);
+        const arc = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        arc.setAttribute("d", `M ${B.x+arcR} ${B.y} A ${arcR} ${arcR} 0 0 0 ${ex} ${ey}`);
+        arc.setAttribute("fill","none"); arc.setAttribute("stroke","var(--accent)"); arc.setAttribute("stroke-width",2);
+        svg.appendChild(arc);
+
+        const addText = (t,x,y,col,weight="bold",size="14") => {
+            const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            txt.setAttribute("x",x); txt.setAttribute("y",y); txt.setAttribute("fill",col);
+            txt.setAttribute("font-weight",weight); txt.setAttribute("font-size",size);
+            txt.textContent = t; svg.appendChild(txt);
+        };
+        addText("B", B.x-25, B.y+5, "#1e293b"); addText("A", A.x+5, A.y+20, "#1e293b"); 
+        addText("C", C.x-5, C.y-15, "#1e293b"); addText("α", B.x+40, B.y-10, "var(--accent)","italic","16");
+    }
+
+    document.getElementById('d1-angle').addEventListener('input', updateD1);
+    document.getElementById('d1-bc').addEventListener('input', updateD1);
+    document.getElementById('d2-angle').addEventListener('input', updateD2);
+    document.getElementById('d2-ab').addEventListener('input', updateD2);
+    updateD1();
+</script>
+</body>
+</html>
