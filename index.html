@@ -32,7 +32,7 @@
 
         .puzzle-section { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; padding: 10px 0; }
         .formula-line { margin: 12px 0; font-size: 1rem; line-height: 1.8; text-align: left; width: 100%; }
-        .drop-box { display: inline-flex; width: 110px; height: 32px; border: 2px dashed var(--primary); border-radius: 6px; align-items: center; justify-content: center; background: #fff; cursor: pointer; transition: 0.2s; font-size: 0.8rem; color: #94a3b8; vertical-align: middle; margin: 0 4px; }
+        .drop-box { display: inline-flex; width: 115px; height: 32px; border: 2px dashed var(--primary); border-radius: 6px; align-items: center; justify-content: center; background: #fff; cursor: pointer; transition: 0.2s; font-size: 0.8rem; color: #94a3b8; vertical-align: middle; margin: 0 4px; }
         .drop-box.filled { border-style: solid; background: #dbeafe; color: var(--primary); font-weight: bold; }
         
         .item-bank { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
@@ -40,7 +40,6 @@
         .draggable-item:hover { background: var(--primary); color: white; }
         .check-btn { margin-top: 10px; padding: 10px 20px; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 0.9rem; }
         
-        /* Cấu trúc thiết kế Lũy tiến từng Stage */
         .stage-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin-bottom: 20px; width: 100%; box-sizing: border-box; text-align: left; transition: 0.3s; }
         .stage-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 10px; color: var(--primary); display: flex; justify-content: space-between; }
         .stage-locked { opacity: 0.4; pointer-events: none; background: #f1f5f9; filter: grayscale(100%); }
@@ -53,7 +52,7 @@
             .content { padding: 12px; }
             .content.active { grid-template-columns: 1fr; gap: 15px; }
             .data-value { font-size: 0.95rem; }
-            .drop-box { width: 100px; height: 30px; }
+            .drop-box { width: 105px; height: 30px; }
         }
     </style>
 </head>
@@ -100,23 +99,23 @@
 
             <div class="stage-card" id="stage1-card">
                 <div class="stage-title">Stage 1: Basic Classification <span id="badge-s1" class="lock-badge" style="background:var(--accent);">Active</span></div>
-                <div class="formula-line">1. Góc A là một <div class="drop-box" id="v_s1_1" onclick="selectBox('v_s1_1')">?</div>.</div>
-                <div class="formula-line">2. Góc B và C là các <div class="drop-box" id="v_s1_2" onclick="selectBox('v_s1_2')">?</div>.</div>
-                <div class="formula-line">3. Tam giác ABC là một <div class="drop-box" id="v_s1_3" onclick="selectBox('v_s1_3')">?</div>.</div>
+                <div class="formula-line">1. Angle A is a <div class="drop-box" id="v_s1_1" onclick="selectBox('v_s1_1')">?</div>.</div>
+                <div class="formula-line">2. Angles B and C are <div class="drop-box" id="v_s1_2" onclick="selectBox('v_s1_2')">?</div>.</div>
+                <div class="formula-line">3. Triangle ABC is a <div class="drop-box" id="v_s1_3" onclick="selectBox('v_s1_3')">?</div>.</div>
                 <button class="check-btn" onclick="checkVocabStage(1)">Verify Stage 1</button>
             </div>
 
             <div class="stage-card stage-locked" id="stage2-card">
                 <div class="stage-title">Stage 2: Triangle Sides Anatomy <span id="badge-s2" class="lock-badge">Locked</span></div>
-                <div class="formula-line">Trong tam giác ABC vuông tại A, cạnh BC được gọi là the <div class="drop-box" id="v_s2_1" onclick="selectBox('v_s2_1')">?</div>, các cạnh AB, AC là các <div class="drop-box" id="v_s2_2" onclick="selectBox('v_s2_2')">?</div>.</div>
-                <div class="formula-line">Cạnh AB được gọi là the <div class="drop-box" id="v_s2_3" onclick="selectBox('v_s2_3')">?</div> to angle B.</div>
-                <div class="formula-line">Cạnh AC được gọi là the <div class="drop-box" id="v_s2_4" onclick="selectBox('v_s2_4')">?</div> to angle B.</div>
+                <div class="formula-line">In triangle ABC (right-angled at A), side BC is called the <div class="drop-box" id="v_s2_1" onclick="selectBox('v_s2_1')">?</div>, and sides AB, AC are the <div class="drop-box" id="v_s2_2" onclick="selectBox('v_s2_2')">?</div>.</div>
+                <div class="formula-line">Side AB is called the <div class="drop-box" id="v_s2_3" onclick="selectBox('v_s2_3')">?</div> to angle B.</div>
+                <div class="formula-line">Side AC is called the <div class="drop-box" id="v_s2_4" onclick="selectBox('v_s2_4')">?</div> to angle B.</div>
                 <button class="check-btn" onclick="checkVocabStage(2)">Verify Stage 2</button>
             </div>
 
             <div class="stage-card stage-locked" id="stage3-card">
                 <div class="stage-title">Stage 3: Trigonometric Definitions <span id="badge-s3" class="lock-badge">Locked</span></div>
-                <div class="formula-line">Trong tam giác ABC vuông tại A, ta có các <div class="drop-box" id="v_s3_1" onclick="selectBox('v_s3_1')">?</div> như sau:</div>
+                <div class="formula-line">In triangle ABC right-angled at A, we have the following <div class="drop-box" id="v_s3_1" onclick="selectBox('v_s3_1')">?</div>:</div>
                 <div class="formula-line">• The <div class="drop-box" id="v_s3_2" onclick="selectBox('v_s3_2')">?</div> of an angle is the ratio of the length of the opposite side to that angle to the length of the hypotenuse. Therefore, the <div class="drop-box" id="v_s3_3" onclick="selectBox('v_s3_3')">?</div> of angle B is AC/BC.</div>
                 <div class="formula-line">• The <div class="drop-box" id="v_s3_4" onclick="selectBox('v_s3_4')">?</div> of an angle is the ratio of the length of the adjacent side to that angle to the length of the hypotenuse. Therefore, the <div class="drop-box" id="v_s3_5" onclick="selectBox('v_s3_5')">?</div> of angle B is AB/BC.</div>
                 <div class="formula-line">• The <div class="drop-box" id="v_s3_6" onclick="selectBox('v_s3_6')">?</div> of an angle is the ratio of the length of the opposite side to the length of the adjacent side to that angle. Therefore, the <div class="drop-box" id="v_s3_7" onclick="selectBox('v_s3_7')">?</div> of angle B is AC/AB.</div>
@@ -245,7 +244,6 @@
         if(tabName === 'p2') drawTriangle('svg-p2', 160, 100, 32);
     }
 
-    // Khởi tạo đồ họa tam giác ABC làm chuẩn từ vựng góc nhìn tĩnh
     function drawStaticTriangle(id) {
         const svg = document.getElementById(id); if(!svg) return; svg.innerHTML = '';
         const B = { x: 80, y: 240 }, A = { x: 380, y: 240 }, C = { x: 380, y: 50 };
@@ -257,11 +255,9 @@
         };
         drawLine(B,A,"#334155"); drawLine(A,C,"#10b981"); drawLine(B,C,"#ef4444");
 
-        // Góc vuông tại A
         const ra = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
         ra.setAttribute("points", "360,240 360,220 380,220"); ra.setAttribute("fill","none"); ra.setAttribute("stroke","#94a3b8"); svg.appendChild(ra);
 
-        // Ký hiệu cung góc B
         const arc = document.createElementNS("http://www.w3.org/2000/svg", "path");
         arc.setAttribute("d", "M 120 240 A 40 40 0 0 0 114.6 214.3"); arc.setAttribute("fill","none"); arc.setAttribute("stroke","var(--accent)"); arc.setAttribute("stroke-width",2); svg.appendChild(arc);
 
@@ -321,7 +317,6 @@
         }
     }
 
-    // Xử lý kiểm tra từ vựng lũy tiến cho các Stage lớp Từ Vựng
     function checkVocabStage(stageNum) {
         const stageAnswers = {
             1: { v_s1_1: "right angle", v_s1_2: "acute angles", v_s1_3: "right triangle" },
@@ -434,7 +429,6 @@
     document.getElementById('d2-angle').addEventListener('input', updateD2);
     document.getElementById('d2-ab').addEventListener('input', updateD2);
     
-    // Gọi hàm khởi tạo mặc định cho Tab đầu tiên khi load trang
     drawStaticTriangle('svg-vocab-ref');
 </script>
 </body>
