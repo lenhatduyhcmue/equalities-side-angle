@@ -3,31 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bilingual Math: Geometric Relations Discovery (Mobile Optimized)</title>
+    <title>Bilingual Math: Geometric Relations Discovery (Mobile Fixed)</title>
     <style>
         :root { --primary: #2563eb; --success: #10b981; --accent: #f59e0b; --bg: #f8fafc; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #1e293b; }
         .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; }
         
+        /* Tối ưu nút bấm trên di động để dễ chạm trúng */
         .tabs { display: flex; background: #e2e8f0; border-bottom: 2px solid #cbd5e1; flex-wrap: wrap; }
-        .tab-btn { flex: 1; min-width: 120px; padding: 12px 5px; border: none; background: none; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.3s; color: #64748b; text-align: center; }
+        .tab-btn { flex: 1; min-width: 120px; padding: 14px 5px; border: none; background: none; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.3s; color: #64748b; text-align: center; -webkit-tap-highlight-color: transparent; }
         .tab-btn.active { background: white; color: var(--primary); border-bottom: 3px solid var(--primary); }
         
         .content { padding: 20px; display: none; }
-        /* Mặc định trên máy tính: hiển thị 2 cột */
         .content.active { display: grid; grid-template-columns: 360px 1fr; gap: 20px; }
 
         .panel { background: #f1f5f9; padding: 20px; border-radius: 0.75rem; display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; }
-        .canvas-area { display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed #cbd5e1; border-radius: 0.75rem; min-height: 400px; position: relative; background: #fff; padding: 10px; box-sizing: border-box; }
         
-        /* Cấu hình SVG tự động co giãn theo khung chứa */
+        /* Sửa lỗi sập kích thước hình ảnh trên di động */
+        .canvas-area { background: #fff; border: 2px dashed #cbd5e1; border-radius: 0.75rem; padding: 15px; text-align: center; box-sizing: border-box; }
+        .canvas-container { display: inline-block; width: 100%; max-width: 450px; margin: 0 auto; vertical-align: middle; }
         svg { width: 100%; height: auto; display: block; }
         
         label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.85rem; }
         input[type="range"] { width: 100%; cursor: pointer; }
 
         .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .data-card { background: white; padding: 10px; border-radius: 5px; border-left: 4px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .data-card { background: white; padding: 10px; border-radius: 5px; border-left: 4px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.02); text-align: left; }
         .data-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
         .data-value { font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.05rem; color: #1e293b; }
 
@@ -36,22 +37,20 @@
         .drop-box { width: 80px; height: 40px; border: 2px dashed var(--primary); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: #fff; cursor: pointer; transition: 0.2s; font-size: 0.85rem; color: #94a3b8; }
         .drop-box.filled { border-style: solid; background: #dbeafe; color: var(--primary); font-weight: bold; }
         .item-bank { display: flex; gap: 6px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
-        .draggable-item { padding: 6px 12px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; transition: 0.2s; }
+        .draggable-item { padding: 8px 14px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: 0.2s; -webkit-tap-highlight-color: transparent; }
         .draggable-item:hover { background: var(--primary); color: white; }
-        .check-btn { margin-top: 20px; padding: 10px 30px; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; max-width: 250px; }
+        .check-btn { margin-top: 20px; padding: 12px 30px; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; max-width: 250px; }
         
         hr { width: 100%; border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0; }
 
-        /* --- CẤU HÌNH ĐẶC BIỆT CHO ĐIỆN THOẠI (RESPONSIVE) --- */
+        /* Giao diện 1 cột đứng hoàn hảo cho điện thoại */
         @media (max-width: 768px) {
             body { padding: 5px; }
             .content { padding: 12px; }
-            /* Chuyển từ 2 cột thành 1 cột xếp chồng */
             .content.active { grid-template-columns: 1fr; gap: 15px; }
-            .canvas-area { min-height: 300px; }
             .data-value { font-size: 0.95rem; }
             .formula-line { font-size: 1rem; }
-            .drop-box { width: 70px; height: 35px; }
+            .drop-box { width: 75px; height: 38px; }
         }
     </style>
 </head>
@@ -59,10 +58,10 @@
 
 <div class="container">
     <div class="tabs">
-        <button class="tab-btn active" onclick="openTab(event, 'd1')">1. Discovery (Th.1)</button>
-        <button class="tab-btn" onclick="openTab(event, 'p1')">2. Formation (Th.1)</button>
-        <button class="tab-btn" onclick="openTab(event, 'd2')">3. Discovery (Th.2)</button>
-        <button class="tab-btn" onclick="openTab(event, 'p2')">4. Formation (Th.2)</button>
+        <button class="tab-btn active" onclick="openTab(this, 'd1')">1. Discovery (Th.1)</button>
+        <button class="tab-btn" onclick="openTab(this, 'p1')">2. Formation (Th.1)</button>
+        <button class="tab-btn" onclick="openTab(this, 'd2')">3. Discovery (Th.2)</button>
+        <button class="tab-btn" onclick="openTab(this, 'p2')">4. Formation (Th.2)</button>
     </div>
 
     <div id="d1" class="content active">
@@ -83,7 +82,9 @@
             </div>
         </div>
         <div class="canvas-area">
-            <svg id="svg-d1" viewBox="0 0 500 400"></svg>
+            <div class="canvas-container">
+                <svg id="svg-d1" viewBox="0 0 500 400"></svg>
+            </div>
         </div>
     </div>
 
@@ -95,11 +96,4 @@
                 <div class="draggable-item" onclick="fillBox('AC')">AC</div>
                 <div class="draggable-item" onclick="fillBox('BC')">BC</div>
                 <div class="draggable-item" onclick="fillBox('sin(B)')">sin(B)</div>
-                <div class="draggable-item" onclick="fillBox('cos(B)')">cos(B)</div>
-            </div>
-            <button class="check-btn" onclick="checkPuzzle(1)">Check Theorem 1</button>
-            <p id="f1" style="font-weight: bold; margin-top: 10px; text-align: center;"></p>
-        </div>
-        <div class="puzzle-section">
-            <div class="canvas-area" style="min-height: 200px; border: none;">
-                <svg id="svg-p1" viewBox="0 0 4
+                <div class="draggable-item
