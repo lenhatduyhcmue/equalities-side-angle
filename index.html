@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bilingual Math: Geometric Relations Discovery (Fixed Bounds Scale)</title>
+    <title>Bilingual Math: Geometric Relations Discovery (Absolute Fixed Scale)</title>
     <style>
         :root { --primary: #2563eb; --success: #10b981; --accent: #f59e0b; --bg: #f8fafc; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #1e293b; }
@@ -189,12 +189,12 @@
         document.getElementById('v1-bcs').innerText = ac.toFixed(1); document.getElementById('v1-bcc').innerText = ab.toFixed(1);
         document.getElementById('v1-ac').innerText = ac.toFixed(1); document.getElementById('v1-ab').innerText = ab.toFixed(1);
         
-        // Tính giới hạn lớn nhất ứng với góc hiện tại (khi thanh trượt BC đạt tối đa là 350)
-        const maxBC = 350;
-        const maxAb = maxBC * c;
-        const maxAc = maxBC * s;
+        // KÍCH THƯỚC LỚN NHẤT TUYỆT ĐỐI TRÊN TOÀN BỘ THANH TRƯỢT TAB 1:
+        // BC max = 350. Góc tối thiểu 15° (cho AB cực đại), góc tối đa 75° (cho AC cực đại)
+        const globalMaxAB = 350 * Math.cos(15 * Math.PI / 180); // ~338.1
+        const globalMaxAC = 350 * Math.sin(75 * Math.PI / 180); // ~338.1
 
-        drawTriangle('svg-d1', ab, ac, a, maxAb, maxAc);
+        drawTriangle('svg-d1', ab, ac, a, globalMaxAB, globalMaxAC);
     }
 
     function updateD2() {
@@ -207,11 +207,12 @@
         document.getElementById('v2-abt').innerText = ac.toFixed(1); document.getElementById('v2-act').innerText = ab.toFixed(1);
         document.getElementById('v2-ac').innerText = ac.toFixed(1); document.getElementById('v2-ab').innerText = ab.toFixed(1);
         
-        // Tính giới hạn lớn nhất ứng với góc hiện tại (khi thanh trượt AB đạt tối đa là 300)
-        const maxAB = 300;
-        const maxAc = maxAB * t;
+        // KÍCH THƯỚC LỚN NHẤT TUYỆT ĐỐI TRÊN TOÀN BỘ THANH TRƯỢT TAB 3:
+        // AB max = 300. Cạnh AC đạt cực đại khi Góc max = 75° (300 * tan(75°) ~ 1119.6)
+        const globalMaxAB = 300;
+        const globalMaxAC = 300 * Math.tan(75 * Math.PI / 180); // ~1119.6
 
-        drawTriangle('svg-d2', ab, ac, a, maxAB, maxAc);
+        drawTriangle('svg-d2', ab, ac, a, globalMaxAB, globalMaxAC);
     }
 
     function selectBox(id) {
@@ -243,7 +244,7 @@
         f.style.color = correct ? "var(--success)" : "var(--accent)";
     }
 
-    /* THUẬT TOÁN CO GIÃN ĐỘNG THEO TRẦN GIỚI HẠN (BOUNDS-BASED SCALE) */
+    /* THUẬT TOÁN ĐỊNH VỊ CỐ ĐỊNH THEO KÍCH THƯỚC TRẦN TUYỆT ĐỐI */
     function drawTriangle(id, ab, ac, alpha, maxAb, maxAc) {
         const svg = document.getElementById(id); if(!svg) return; svg.innerHTML = '';
         
@@ -255,16 +256,15 @@
         const maxW = svgW - padLeft - padRight;
         const maxH = svgH - padTop - padBottom;
         
-        // Nếu truyền vào giá trị cực đại (Tab 1, Tab 3), dùng nó để chốt khung cố định cho góc đó
-        // Nếu không truyền (Tab 2, Tab 4 hình tĩnh), dùng luôn giá trị hiện tại
+        // Sử dụng giá trị trần cố định để chốt hằng số tỷ lệ scale không bao giờ thay đổi
         const baseAb = maxAb || ab;
         const baseAc = maxAc || ac;
         
         const scaleX = maxW / baseAb;
         const scaleY = maxH / baseAc;
-        const scale = Math.min(scaleX, scaleY);
+        const scale = Math.min(scaleX, scaleY); // Hằng số cố định tuyệt đối cho tab này
         
-        // Kích thước hiển thị thực tế co giãn dựa trên thanh trượt hiện hành
+        // Kích thước hiển thị thực tế co giãn tuyến tính mượt mà theo thanh trượt
         const drawAB = ab * scale;
         const drawAC = ac * scale;
         
