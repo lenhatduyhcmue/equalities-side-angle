@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bilingual Math: Geometric Relations Discovery (Large Canvas Bounds)</title>
+    <title>Bilingual Math: Geometric Relations Discovery & Vocabulary Review</title>
     <style>
-        :root { --primary: #2563eb; --success: #10b981; --accent: #f59e0b; --bg: #f8fafc; }
+        :root { --primary: #2563eb; --success: #10b981; --accent: #f59e0b; --bg: #f8fafc; --lock: #94a3b8; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #1e293b; }
         .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; }
         
@@ -14,12 +14,11 @@
         .tab-btn.active { background: white; color: var(--primary); border-bottom: 3px solid var(--primary); }
         
         .content { padding: 20px; display: none; }
-        .content.active { display: grid; grid-template-columns: 360px 1fr; gap: 20px; align-items: start; }
+        .content.active { display: grid; grid-template-columns: 380px 1fr; gap: 20px; align-items: start; }
 
         .panel { background: #f1f5f9; padding: 20px; border-radius: 0.75rem; display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; }
         
         .canvas-area { background: #fff; border: 2px dashed #cbd5e1; border-radius: 0.75rem; padding: 15px; text-align: center; box-sizing: border-box; }
-        /* Tăng max-width từ 450px lên 650px để khung hiển thị to rõ hơn */
         .canvas-container { display: inline-block; width: 100%; max-width: 650px; margin: 0 auto; vertical-align: middle; }
         svg { width: 100%; height: auto; display: block; }
         
@@ -32,14 +31,21 @@
         .data-value { font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.05rem; color: #1e293b; }
 
         .puzzle-section { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; padding: 10px 0; }
-        .formula-line { margin: 12px 0; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
-        .drop-box { width: 80px; height: 40px; border: 2px dashed var(--primary); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: #fff; cursor: pointer; transition: 0.2s; font-size: 0.85rem; color: #94a3b8; }
+        .formula-line { margin: 12px 0; font-size: 1rem; line-height: 1.8; text-align: left; width: 100%; }
+        .drop-box { display: inline-flex; width: 110px; height: 32px; border: 2px dashed var(--primary); border-radius: 6px; align-items: center; justify-content: center; background: #fff; cursor: pointer; transition: 0.2s; font-size: 0.8rem; color: #94a3b8; vertical-align: middle; margin: 0 4px; }
         .drop-box.filled { border-style: solid; background: #dbeafe; color: var(--primary); font-weight: bold; }
-        .item-bank { display: flex; gap: 6px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
-        .draggable-item { padding: 8px 14px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: 0.2s; -webkit-tap-highlight-color: transparent; }
-        .draggable-item:hover { background: var(--primary); color: white; }
-        .check-btn { margin-top: 20px; padding: 12px 30px; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; max-width: 250px; }
         
+        .item-bank { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .draggable-item { padding: 6px 12px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; transition: 0.2s; -webkit-tap-highlight-color: transparent; }
+        .draggable-item:hover { background: var(--primary); color: white; }
+        .check-btn { margin-top: 10px; padding: 10px 20px; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 0.9rem; }
+        
+        /* Cấu trúc thiết kế Lũy tiến từng Stage */
+        .stage-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin-bottom: 20px; width: 100%; box-sizing: border-box; text-align: left; transition: 0.3s; }
+        .stage-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 10px; color: var(--primary); display: flex; justify-content: space-between; }
+        .stage-locked { opacity: 0.4; pointer-events: none; background: #f1f5f9; filter: grayscale(100%); }
+        .lock-badge { font-size: 0.75rem; background: #64748b; color: white; padding: 2px 8px; border-radius: 20px; }
+
         hr { width: 100%; border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0; }
 
         @media (max-width: 768px) {
@@ -47,8 +53,7 @@
             .content { padding: 12px; }
             .content.active { grid-template-columns: 1fr; gap: 15px; }
             .data-value { font-size: 0.95rem; }
-            .formula-line { font-size: 1rem; }
-            .drop-box { width: 75px; height: 38px; }
+            .drop-box { width: 100px; height: 30px; }
         }
     </style>
 </head>
@@ -56,13 +61,72 @@
 
 <div class="container">
     <div class="tabs">
-        <button class="tab-btn active" onclick="openTab(this, 'd1')">1. Discovery (Th.1)</button>
-        <button class="tab-btn" onclick="openTab(this, 'p1')">2. Formation (Th.1)</button>
-        <button class="tab-btn" onclick="openTab(this, 'd2')">3. Discovery (Th.2)</button>
-        <button class="tab-btn" onclick="openTab(this, 'p2')">4. Formation (Th.2)</button>
+        <button class="tab-btn active" onclick="openTab(this, 'vocab')">1. Vocabulary Review</button>
+        <button class="tab-btn" onclick="openTab(this, 'd1')">2. Discovery (Th.1)</button>
+        <button class="tab-btn" onclick="openTab(this, 'p1')">3. Formation (Th.1)</button>
+        <button class="tab-btn" onclick="openTab(this, 'd2')">4. Discovery (Th.2)</button>
+        <button class="tab-btn" onclick="openTab(this, 'p2')">5. Formation (Th.2)</button>
     </div>
 
-    <div id="d1" class="content active">
+    <div id="vocab" class="content active">
+        <div class="panel">
+            <h3>Word Bank</h3>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: -5px;">Select a blank box below, then click a word from this bank to fill it.</p>
+            <div class="item-bank">
+                <div class="draggable-item" onclick="fillBox('right angle')">right angle</div>
+                <div class="draggable-item" onclick="fillBox('acute angles')">acute angles</div>
+                <div class="draggable-item" onclick="fillBox('right triangle')">right triangle</div>
+                <div class="draggable-item" onclick="fillBox('hypotenuse')">hypotenuse</div>
+                <div class="draggable-item" onclick="fillBox('legs')">legs</div>
+                <div class="draggable-item" onclick="fillBox('adjacent side')">adjacent side</div>
+                <div class="draggable-item" onclick="fillBox('opposite side')">opposite side</div>
+                <div class="draggable-item" onclick="fillBox('trigonometric ratios')">trigonometric ratios</div>
+                <div class="draggable-item" onclick="fillBox('sine')">sine</div>
+                <div class="draggable-item" onclick="fillBox('cosine')">cosine</div>
+                <div class="draggable-item" onclick="fillBox('tangent')">tangent</div>
+                <div class="draggable-item" onclick="fillBox('cotangent')">cotangent</div>
+            </div>
+            <div style="margin-top: 15px; font-size: 0.8rem; color: #64748b;">
+                <strong>Instruction:</strong> Complete each stage sequentially to unlock the next level.
+            </div>
+        </div>
+
+        <div class="puzzle-section">
+            <div class="canvas-area" style="width: 100%; border: none; padding-bottom: 20px;">
+                <div class="canvas-container" style="max-width: 450px;">
+                    <svg id="svg-vocab-ref" viewBox="0 0 500 300"></svg>
+                </div>
+            </div>
+
+            <div class="stage-card" id="stage1-card">
+                <div class="stage-title">Stage 1: Basic Classification <span id="badge-s1" class="lock-badge" style="background:var(--accent);">Active</span></div>
+                <div class="formula-line">1. Góc A là một <div class="drop-box" id="v_s1_1" onclick="selectBox('v_s1_1')">?</div>.</div>
+                <div class="formula-line">2. Góc B và C là các <div class="drop-box" id="v_s1_2" onclick="selectBox('v_s1_2')">?</div>.</div>
+                <div class="formula-line">3. Tam giác ABC là một <div class="drop-box" id="v_s1_3" onclick="selectBox('v_s1_3')">?</div>.</div>
+                <button class="check-btn" onclick="checkVocabStage(1)">Verify Stage 1</button>
+            </div>
+
+            <div class="stage-card stage-locked" id="stage2-card">
+                <div class="stage-title">Stage 2: Triangle Sides Anatomy <span id="badge-s2" class="lock-badge">Locked</span></div>
+                <div class="formula-line">Trong tam giác ABC vuông tại A, cạnh BC được gọi là the <div class="drop-box" id="v_s2_1" onclick="selectBox('v_s2_1')">?</div>, các cạnh AB, AC là các <div class="drop-box" id="v_s2_2" onclick="selectBox('v_s2_2')">?</div>.</div>
+                <div class="formula-line">Cạnh AB được gọi là the <div class="drop-box" id="v_s2_3" onclick="selectBox('v_s2_3')">?</div> to angle B.</div>
+                <div class="formula-line">Cạnh AC được gọi là the <div class="drop-box" id="v_s2_4" onclick="selectBox('v_s2_4')">?</div> to angle B.</div>
+                <button class="check-btn" onclick="checkVocabStage(2)">Verify Stage 2</button>
+            </div>
+
+            <div class="stage-card stage-locked" id="stage3-card">
+                <div class="stage-title">Stage 3: Trigonometric Definitions <span id="badge-s3" class="lock-badge">Locked</span></div>
+                <div class="formula-line">Trong tam giác ABC vuông tại A, ta có các <div class="drop-box" id="v_s3_1" onclick="selectBox('v_s3_1')">?</div> như sau:</div>
+                <div class="formula-line">• The <div class="drop-box" id="v_s3_2" onclick="selectBox('v_s3_2')">?</div> of an angle is the ratio of the length of the opposite side to that angle to the length of the hypotenuse. Therefore, the <div class="drop-box" id="v_s3_3" onclick="selectBox('v_s3_3')">?</div> of angle B is AC/BC.</div>
+                <div class="formula-line">• The <div class="drop-box" id="v_s3_4" onclick="selectBox('v_s3_4')">?</div> of an angle is the ratio of the length of the adjacent side to that angle to the length of the hypotenuse. Therefore, the <div class="drop-box" id="v_s3_5" onclick="selectBox('v_s3_5')">?</div> of angle B is AB/BC.</div>
+                <div class="formula-line">• The <div class="drop-box" id="v_s3_6" onclick="selectBox('v_s3_6')">?</div> of an angle is the ratio of the length of the opposite side to the length of the adjacent side to that angle. Therefore, the <div class="drop-box" id="v_s3_7" onclick="selectBox('v_s3_7')">?</div> of angle B is AC/AB.</div>
+                <div class="formula-line">• The <div class="drop-box" id="v_s3_8" onclick="selectBox('v_s3_8')">?</div> of an angle is the ratio of the length of the adjacent side to the length of the opposite side to that angle. Therefore, the <div class="drop-box" id="v_s3_9" onclick="selectBox('v_s3_9')">?</div> of angle B is AB/AC.</div>
+                <button class="check-btn" onclick="checkVocabStage(3)">Verify Stage 3</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="d1" class="content">
         <div class="panel">
             <h3>Worksheet: Theorem 1</h3>
             <p style="font-size: 0.8rem; color: #64748b;">Relate Hypotenuse (BC) to AC and AB.</p>
@@ -174,10 +238,39 @@
         document.getElementById(tabName).classList.add("active");
         btn.classList.add("active");
 
+        if(tabName === 'vocab') drawStaticTriangle('svg-vocab-ref');
         if(tabName === 'd1') updateD1();
         if(tabName === 'd2') updateD2();
         if(tabName === 'p1') drawTriangle('svg-p1', 160, 100, 32);
         if(tabName === 'p2') drawTriangle('svg-p2', 160, 100, 32);
+    }
+
+    // Khởi tạo đồ họa tam giác ABC làm chuẩn từ vựng góc nhìn tĩnh
+    function drawStaticTriangle(id) {
+        const svg = document.getElementById(id); if(!svg) return; svg.innerHTML = '';
+        const B = { x: 80, y: 240 }, A = { x: 380, y: 240 }, C = { x: 380, y: 50 };
+        
+        const drawLine = (p1, p2, col) => {
+            const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            l.setAttribute("x1",p1.x); l.setAttribute("y1",p1.y); l.setAttribute("x2",p2.x); l.setAttribute("y2",p2.y);
+            l.setAttribute("stroke",col); l.setAttribute("stroke-width",3); svg.appendChild(l);
+        };
+        drawLine(B,A,"#334155"); drawLine(A,C,"#10b981"); drawLine(B,C,"#ef4444");
+
+        // Góc vuông tại A
+        const ra = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        ra.setAttribute("points", "360,240 360,220 380,220"); ra.setAttribute("fill","none"); ra.setAttribute("stroke","#94a3b8"); svg.appendChild(ra);
+
+        // Ký hiệu cung góc B
+        const arc = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        arc.setAttribute("d", "M 120 240 A 40 40 0 0 0 114.6 214.3"); arc.setAttribute("fill","none"); arc.setAttribute("stroke","var(--accent)"); arc.setAttribute("stroke-width",2); svg.appendChild(arc);
+
+        const addText = (t,x,y,col,size="15") => {
+            const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            txt.setAttribute("x",x); txt.setAttribute("y",y); txt.setAttribute("fill",col); txt.setAttribute("font-weight","bold"); txt.setAttribute("font-size",size);
+            txt.textContent = t; svg.appendChild(txt);
+        };
+        addText("B", B.x-25, B.y+5, "#1e293b"); addText("A", A.x+10, A.y+20, "#1e293b"); addText("C", C.x-5, C.y-15, "#1e293b");
     }
 
     function updateD1() {
@@ -190,10 +283,8 @@
         document.getElementById('v1-bcs').innerText = ac.toFixed(1); document.getElementById('v1-bcc').innerText = ab.toFixed(1);
         document.getElementById('v1-ac').innerText = ac.toFixed(1); document.getElementById('v1-ab').innerText = ab.toFixed(1);
         
-        // Cố định giới hạn trần tuyệt đối cho Tab 1
         const globalMaxAB = 350 * Math.cos(15 * Math.PI / 180); 
         const globalMaxAC = 350 * Math.sin(75 * Math.PI / 180); 
-
         drawTriangle('svg-d1', ab, ac, a, globalMaxAB, globalMaxAC);
     }
 
@@ -207,23 +298,70 @@
         document.getElementById('v2-abt').innerText = ac.toFixed(1); document.getElementById('v2-act').innerText = ab.toFixed(1);
         document.getElementById('v2-ac').innerText = ac.toFixed(1); document.getElementById('v2-ab').innerText = ab.toFixed(1);
         
-        // Cố định giới hạn trần tuyệt đối cho Tab 3
         const globalMaxAB = 300;
         const globalMaxAC = 300 * Math.tan(75 * Math.PI / 180); 
-
         drawTriangle('svg-d2', ab, ac, a, globalMaxAB, globalMaxAC);
     }
 
     function selectBox(id) {
-        if(activeBoxId) document.getElementById(activeBoxId).style.borderColor = "var(--primary)";
-        activeBoxId = id; document.getElementById(id).style.borderColor = "var(--accent)";
+        if(activeBoxId) {
+            const oldBox = document.getElementById(activeBoxId);
+            if (oldBox) oldBox.style.borderColor = "var(--primary)";
+        }
+        activeBoxId = id; 
+        document.getElementById(id).style.borderColor = "var(--accent)";
     }
 
     function fillBox(val) {
         if(activeBoxId) {
             const b = document.getElementById(activeBoxId);
             b.innerText = val; b.classList.add('filled');
-            activeBoxId = null; b.style.borderColor = "var(--primary)";
+            b.style.borderColor = "var(--primary)";
+            activeBoxId = null;
+        }
+    }
+
+    // Xử lý kiểm tra từ vựng lũy tiến cho các Stage lớp Từ Vựng
+    function checkVocabStage(stageNum) {
+        const stageAnswers = {
+            1: { v_s1_1: "right angle", v_s1_2: "acute angles", v_s1_3: "right triangle" },
+            2: { v_s2_1: "hypotenuse", v_s2_2: "legs", v_s2_3: "adjacent side", v_s2_4: "opposite side" },
+            3: { v_s3_1: "trigonometric ratios", v_s3_2: "sine", v_s3_3: "sine", v_s3_4: "cosine", v_s3_5: "cosine", v_s3_6: "tangent", v_s3_7: "tangent", v_s3_8: "cotangent", v_s3_9: "cotangent" }
+        };
+
+        let currentAnswers = stageAnswers[stageNum];
+        let allCorrect = true;
+
+        for (let id in currentAnswers) {
+            const box = document.getElementById(id);
+            if (box.innerText.trim() === currentAnswers[id]) {
+                box.style.backgroundColor = "#dcfce7"; 
+                box.style.borderColor = "var(--success)";
+            } else {
+                box.style.backgroundColor = "#fee2e2"; 
+                box.style.borderColor = "#ef4444";
+                allCorrect = false;
+            }
+        }
+
+        if (allCorrect) {
+            if (stageNum === 1) {
+                document.getElementById('stage2-card').classList.remove('stage-locked');
+                document.getElementById('badge-s2').innerText = "Active";
+                document.getElementById('badge-s2').style.background = "var(--accent)";
+                document.getElementById('badge-s1').innerText = "Completed";
+                document.getElementById('badge-s1').style.background = "var(--success)";
+            } else if (stageNum === 2) {
+                document.getElementById('stage3-card').classList.remove('stage-locked');
+                document.getElementById('badge-s3').innerText = "Active";
+                document.getElementById('badge-s3').style.background = "var(--accent)";
+                document.getElementById('badge-s2').innerText = "Completed";
+                document.getElementById('badge-s2').style.background = "var(--success)";
+            } else if (stageNum === 3) {
+                document.getElementById('badge-s3').innerText = "Completed";
+                document.getElementById('badge-s3').style.background = "var(--success)";
+                alert("Excellent! You have mastered all basic vocabulary terms for Right Triangles!");
+            }
         }
     }
 
@@ -243,27 +381,17 @@
         f.style.color = correct ? "var(--success)" : "var(--accent)";
     }
 
-    /* THUẬT TOÁN ĐỊNH VỊ TỰ ĐỘNG THEO LƯỚI KHUNG ĐÃ ĐƯỢC MỞ RỘNG */
     function drawTriangle(id, ab, ac, alpha, maxAb, maxAc) {
         const svg = document.getElementById(id); if(!svg) return; svg.innerHTML = '';
-        
         const viewBox = svg.getAttribute("viewBox").split(" ");
-        const svgW = parseFloat(viewBox[2]);
-        const svgH = parseFloat(viewBox[3]);
+        const svgW = parseFloat(viewBox[2]), svgH = parseFloat(viewBox[3]);
         
         const padLeft = 50, padRight = 40, padTop = 40, padBottom = 50;
-        const maxW = svgW - padLeft - padRight;
-        const maxH = svgH - padTop - padBottom;
+        const maxW = svgW - padLeft - padRight, maxH = svgH - padTop - padBottom;
         
-        const baseAb = maxAb || ab;
-        const baseAc = maxAc || ac;
-        
-        const scaleX = maxW / baseAb;
-        const scaleY = maxH / baseAc;
-        const scale = Math.min(scaleX, scaleY); 
-        
-        const drawAB = ab * scale;
-        const drawAC = ac * scale;
+        const baseAb = maxAb || ab, baseAc = maxAc || ac;
+        const scale = Math.min(maxW / baseAb, maxH / baseAc); 
+        const drawAB = ab * scale, drawAC = ac * scale;
         
         const B = { x: padLeft, y: svgH - padBottom };
         const A = { x: B.x + drawAB, y: B.y };
@@ -295,20 +423,19 @@
 
         const addText = (t,x,y,col,weight="bold",size="14") => {
             const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            txt.setAttribute("x",x); txt.setAttribute("y",y); txt.setAttribute("fill",col);
-            txt.setAttribute("font-weight",weight); txt.setAttribute("font-size",size);
+            txt.setAttribute("x",x); txt.setAttribute("y",y); txt.setAttribute("fill",col); txt.setAttribute("font-weight",weight); txt.setAttribute("font-size",size);
             txt.textContent = t; svg.appendChild(txt);
         };
-        addText("B", B.x-20, B.y+5, "#1e293b"); 
-        addText("A", A.x+5, A.y+20, "#1e293b"); 
-        addText("C", C.x-5, C.y-12, "#1e293b");
+        addText("B", B.x-20, B.y+5, "#1e293b"); addText("A", A.x+5, A.y+20, "#1e293b"); addText("C", C.x-5, C.y-12, "#1e293b");
     }
 
     document.getElementById('d1-angle').addEventListener('input', updateD1);
     document.getElementById('d1-bc').addEventListener('input', updateD1);
     document.getElementById('d2-angle').addEventListener('input', updateD2);
     document.getElementById('d2-ab').addEventListener('input', updateD2);
-    updateD1();
+    
+    // Gọi hàm khởi tạo mặc định cho Tab đầu tiên khi load trang
+    drawStaticTriangle('svg-vocab-ref');
 </script>
 </body>
 </html>
