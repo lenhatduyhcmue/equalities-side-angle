@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bilingual Math: Geometric Relations Discovery (Absolute Fixed Scale)</title>
+    <title>Bilingual Math: Geometric Relations Discovery (Large Canvas Bounds)</title>
     <style>
         :root { --primary: #2563eb; --success: #10b981; --accent: #f59e0b; --bg: #f8fafc; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #1e293b; }
@@ -14,12 +14,13 @@
         .tab-btn.active { background: white; color: var(--primary); border-bottom: 3px solid var(--primary); }
         
         .content { padding: 20px; display: none; }
-        .content.active { display: grid; grid-template-columns: 360px 1fr; gap: 20px; }
+        .content.active { display: grid; grid-template-columns: 360px 1fr; gap: 20px; align-items: start; }
 
         .panel { background: #f1f5f9; padding: 20px; border-radius: 0.75rem; display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; }
         
         .canvas-area { background: #fff; border: 2px dashed #cbd5e1; border-radius: 0.75rem; padding: 15px; text-align: center; box-sizing: border-box; }
-        .canvas-container { display: inline-block; width: 100%; max-width: 450px; margin: 0 auto; vertical-align: middle; }
+        /* Tăng max-width từ 450px lên 650px để khung hiển thị to rõ hơn */
+        .canvas-container { display: inline-block; width: 100%; max-width: 650px; margin: 0 auto; vertical-align: middle; }
         svg { width: 100%; height: auto; display: block; }
         
         label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.85rem; }
@@ -80,7 +81,7 @@
         </div>
         <div class="canvas-area">
             <div class="canvas-container">
-                <svg id="svg-d1" viewBox="0 0 500 400"></svg>
+                <svg id="svg-d1" viewBox="0 0 600 500"></svg>
             </div>
         </div>
     </div>
@@ -131,7 +132,7 @@
         </div>
         <div class="canvas-area">
             <div class="canvas-container">
-                <svg id="svg-d2" viewBox="0 0 500 400"></svg>
+                <svg id="svg-d2" viewBox="0 0 600 1000"></svg>
             </div>
         </div>
     </div>
@@ -189,10 +190,9 @@
         document.getElementById('v1-bcs').innerText = ac.toFixed(1); document.getElementById('v1-bcc').innerText = ab.toFixed(1);
         document.getElementById('v1-ac').innerText = ac.toFixed(1); document.getElementById('v1-ab').innerText = ab.toFixed(1);
         
-        // KÍCH THƯỚC LỚN NHẤT TUYỆT ĐỐI TRÊN TOÀN BỘ THANH TRƯỢT TAB 1:
-        // BC max = 350. Góc tối thiểu 15° (cho AB cực đại), góc tối đa 75° (cho AC cực đại)
-        const globalMaxAB = 350 * Math.cos(15 * Math.PI / 180); // ~338.1
-        const globalMaxAC = 350 * Math.sin(75 * Math.PI / 180); // ~338.1
+        // Cố định giới hạn trần tuyệt đối cho Tab 1
+        const globalMaxAB = 350 * Math.cos(15 * Math.PI / 180); 
+        const globalMaxAC = 350 * Math.sin(75 * Math.PI / 180); 
 
         drawTriangle('svg-d1', ab, ac, a, globalMaxAB, globalMaxAC);
     }
@@ -207,10 +207,9 @@
         document.getElementById('v2-abt').innerText = ac.toFixed(1); document.getElementById('v2-act').innerText = ab.toFixed(1);
         document.getElementById('v2-ac').innerText = ac.toFixed(1); document.getElementById('v2-ab').innerText = ab.toFixed(1);
         
-        // KÍCH THƯỚC LỚN NHẤT TUYỆT ĐỐI TRÊN TOÀN BỘ THANH TRƯỢT TAB 3:
-        // AB max = 300. Cạnh AC đạt cực đại khi Góc max = 75° (300 * tan(75°) ~ 1119.6)
+        // Cố định giới hạn trần tuyệt đối cho Tab 3
         const globalMaxAB = 300;
-        const globalMaxAC = 300 * Math.tan(75 * Math.PI / 180); // ~1119.6
+        const globalMaxAC = 300 * Math.tan(75 * Math.PI / 180); 
 
         drawTriangle('svg-d2', ab, ac, a, globalMaxAB, globalMaxAC);
     }
@@ -244,7 +243,7 @@
         f.style.color = correct ? "var(--success)" : "var(--accent)";
     }
 
-    /* THUẬT TOÁN ĐỊNH VỊ CỐ ĐỊNH THEO KÍCH THƯỚC TRẦN TUYỆT ĐỐI */
+    /* THUẬT TOÁN ĐỊNH VỊ TỰ ĐỘNG THEO LƯỚI KHUNG ĐÃ ĐƯỢC MỞ RỘNG */
     function drawTriangle(id, ab, ac, alpha, maxAb, maxAc) {
         const svg = document.getElementById(id); if(!svg) return; svg.innerHTML = '';
         
@@ -256,15 +255,13 @@
         const maxW = svgW - padLeft - padRight;
         const maxH = svgH - padTop - padBottom;
         
-        // Sử dụng giá trị trần cố định để chốt hằng số tỷ lệ scale không bao giờ thay đổi
         const baseAb = maxAb || ab;
         const baseAc = maxAc || ac;
         
         const scaleX = maxW / baseAb;
         const scaleY = maxH / baseAc;
-        const scale = Math.min(scaleX, scaleY); // Hằng số cố định tuyệt đối cho tab này
+        const scale = Math.min(scaleX, scaleY); 
         
-        // Kích thước hiển thị thực tế co giãn tuyến tính mượt mà theo thanh trượt
         const drawAB = ab * scale;
         const drawAC = ac * scale;
         
