@@ -14,20 +14,34 @@
         .tab-btn.active { background: white; color: var(--primary); border-bottom: 3px solid var(--primary); }
         
         .content { padding: 20px; display: none; }
-        /* Thay đổi từ align-items: start sang stretch để cột chứa panel có thể kéo dài dọc theo trang */
-        .content.active { display: grid; grid-template-columns: 380px 1fr; gap: 20px; align-items: stretch; }
+        /* Grid chính thiết lập căn đỉnh để cột hành lang co giãn đúng kích thước */
+        .content.active { display: grid; grid-template-columns: 380px 1fr; gap: 20px; align-items: start; }
 
-        /* Tối ưu hóa panel để kích hoạt tính năng chạy theo màn hình (Sticky) */
-        .panel { background: #f1f5f9; padding: 20px; border-radius: 0.75rem; display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; }
+        /* Cột hành lang bên trái bọc ngoài panel */
+        .sidebar-column {
+            height: 100%;
+        }
+
+        /* Panel chính thức nhận diện Sticky chuẩn xác */
+        .panel { 
+            background: #f1f5f9; 
+            padding: 20px; 
+            border-radius: 0.75rem; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            box-sizing: border-box; 
+        }
         
         @media (min-width: 769px) {
             .panel {
-                position: -webkit-sticky; /* Hỗ trợ trình duyệt Safari */
+                position: -webkit-sticky;
                 position: sticky;
-                top: 20px; /* Khoảng cách cách mép trên màn hình khi cuộn */
-                max-height: calc(100vh - 40px); /* Giới hạn chiều cao bằng màn hình để tránh bị khuất */
-                overflow-y: auto; /* Tự động thêm thanh cuộn nội bộ nếu danh sách từ quá dài */
-                z-index: 10;
+                top: 20px; /* Khoảng cách neo từ mép trên trình duyệt */
+                max-height: calc(100vh - 40px);
+                overflow-y: auto;
+                z-index: 100;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.03);
             }
         }
         
@@ -81,25 +95,27 @@
     </div>
 
     <div id="vocab" class="content active">
-        <div class="panel">
-            <h3>Word Bank</h3>
-            <p style="font-size: 0.8rem; color: #64748b; margin-top: -5px;">Select a blank box below, then click a word from this bank to fill it.</p>
-            <div class="item-bank">
-                <div class="draggable-item" onclick="fillBox('right angle')">right angle</div>
-                <div class="draggable-item" onclick="fillBox('acute angles')">acute angles</div>
-                <div class="draggable-item" onclick="fillBox('right triangle')">right triangle</div>
-                <div class="draggable-item" onclick="fillBox('hypotenuse')">hypotenuse</div>
-                <div class="draggable-item" onclick="fillBox('legs')">legs</div>
-                <div class="draggable-item" onclick="fillBox('adjacent side')">adjacent side</div>
-                <div class="draggable-item" onclick="fillBox('opposite side')">opposite side</div>
-                <div class="draggable-item" onclick="fillBox('trigonometric ratios')">trigonometric ratios</div>
-                <div class="draggable-item" onclick="fillBox('sine')">sine</div>
-                <div class="draggable-item" onclick="fillBox('cosine')">cosine</div>
-                <div class="draggable-item" onclick="fillBox('tangent')">tangent</div>
-                <div class="draggable-item" onclick="fillBox('cotangent')">cotangent</div>
-            </div>
-            <div style="margin-top: 15px; font-size: 0.8rem; color: #64748b;">
-                <strong>Instruction:</strong> Complete each stage sequentially to unlock the next level.
+        <div class="sidebar-column">
+            <div class="panel">
+                <h3>Word Bank</h3>
+                <p style="font-size: 0.8rem; color: #64748b; margin-top: -5px;">Select a blank box below, then click a word from this bank to fill it.</p>
+                <div class="item-bank">
+                    <div class="draggable-item" onclick="fillBox('right angle')">right angle</div>
+                    <div class="draggable-item" onclick="fillBox('acute angles')">acute angles</div>
+                    <div class="draggable-item" onclick="fillBox('right triangle')">right triangle</div>
+                    <div class="draggable-item" onclick="fillBox('hypotenuse')">hypotenuse</div>
+                    <div class="draggable-item" onclick="fillBox('legs')">legs</div>
+                    <div class="draggable-item" onclick="fillBox('adjacent side')">adjacent side</div>
+                    <div class="draggable-item" onclick="fillBox('opposite side')">opposite side</div>
+                    <div class="draggable-item" onclick="fillBox('trigonometric ratios')">trigonometric ratios</div>
+                    <div class="draggable-item" onclick="fillBox('sine')">sine</div>
+                    <div class="draggable-item" onclick="fillBox('cosine')">cosine</div>
+                    <div class="draggable-item" onclick="fillBox('tangent')">tangent</div>
+                    <div class="draggable-item" onclick="fillBox('cotangent')">cotangent</div>
+                </div>
+                <div style="margin-top: 15px; font-size: 0.8rem; color: #64748b;">
+                    <strong>Instruction:</strong> Complete each stage sequentially to unlock the next level.
+                </div>
             </div>
         </div>
 
@@ -139,20 +155,22 @@
     </div>
 
     <div id="d1" class="content">
-        <div class="panel">
-            <h3>Worksheet: Theorem 1</h3>
-            <p style="font-size: 0.8rem; color: #64748b;">Relate Hypotenuse (BC) to AC and AB.</p>
-            <label>Angle B: <span id="d1-angle-val">30</span>°</label>
-            <input type="range" id="d1-angle" min="15" max="75" value="30">
-            <label>Hypotenuse BC: <span id="d1-bc-val">250</span></label>
-            <input type="range" id="d1-bc" min="150" max="350" value="250">
-            <div class="data-grid">
-                <div class="data-card"><div class="data-label">sin(B)</div><div class="data-value" id="v1-sin">0.500</div></div>
-                <div class="data-card"><div class="data-label">cos(B)</div><div class="data-value" id="v1-cos">0.866</div></div>
-                <div class="data-card" style="border-color: var(--success);"><div class="data-label">BC · sin(B)</div><div class="data-value" id="v1-bcs">125.0</div></div>
-                <div class="data-card" style="border-color: var(--success);"><div class="data-label">BC · cos(B)</div><div class="data-value" id="v1-bcc">216.5</div></div>
-                <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AC (Opp)</div><div class="data-value" id="v1-ac">125.0</div></div>
-                <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AB (Adj)</div><div class="data-value" id="v1-ab">216.5</div></div>
+        <div class="sidebar-column">
+            <div class="panel">
+                <h3>Worksheet: Theorem 1</h3>
+                <p style="font-size: 0.8rem; color: #64748b;">Relate Hypotenuse (BC) to AC and AB.</p>
+                <label>Angle B: <span id="d1-angle-val">30</span>°</label>
+                <input type="range" id="d1-angle" min="15" max="75" value="30">
+                <label>Hypotenuse BC: <span id="d1-bc-val">250</span></label>
+                <input type="range" id="d1-bc" min="150" max="350" value="250">
+                <div class="data-grid">
+                    <div class="data-card"><div class="data-label">sin(B)</div><div class="data-value" id="v1-sin">0.500</div></div>
+                    <div class="data-card"><div class="data-label">cos(B)</div><div class="data-value" id="v1-cos">0.866</div></div>
+                    <div class="data-card" style="border-color: var(--success);"><div class="data-label">BC · sin(B)</div><div class="data-value" id="v1-bcs">125.0</div></div>
+                    <div class="data-card" style="border-color: var(--success);"><div class="data-label">BC · cos(B)</div><div class="data-value" id="v1-bcc">216.5</div></div>
+                    <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AC (Opp)</div><div class="data-value" id="v1-ac">125.0</div></div>
+                    <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AB (Adj)</div><div class="data-value" id="v1-ab">216.5</div></div>
+                </div>
             </div>
         </div>
         <div class="canvas-area">
@@ -163,17 +181,19 @@
     </div>
 
     <div id="p1" class="content">
-        <div class="panel">
-            <h3>Item Bank (Th.1)</h3>
-            <div class="item-bank" id="bank1">
-                <div class="draggable-item" onclick="fillBox('AB')">AB</div>
-                <div class="draggable-item" onclick="fillBox('AC')">AC</div>
-                <div class="draggable-item" onclick="fillBox('BC')">BC</div>
-                <div class="draggable-item" onclick="fillBox('sin(B)')">sin(B)</div>
-                <div class="draggable-item" onclick="fillBox('cos(B)')">cos(B)</div>
+        <div class="sidebar-column">
+            <div class="panel">
+                <h3>Item Bank (Th.1)</h3>
+                <div class="item-bank" id="bank1">
+                    <div class="draggable-item" onclick="fillBox('AB')">AB</div>
+                    <div class="draggable-item" onclick="fillBox('AC')">AC</div>
+                    <div class="draggable-item" onclick="fillBox('BC')">BC</div>
+                    <div class="draggable-item" onclick="fillBox('sin(B)')">sin(B)</div>
+                    <div class="draggable-item" onclick="fillBox('cos(B)')">cos(B)</div>
+                </div>
+                <button class="check-btn" onclick="checkPuzzle(1)">Check Theorem 1</button>
+                <p id="f1" style="font-weight: bold; margin-top: 10px; text-align: center;"></p>
             </div>
-            <button class="check-btn" onclick="checkPuzzle(1)">Check Theorem 1</button>
-            <p id="f1" style="font-weight: bold; margin-top: 10px; text-align: center;"></p>
         </div>
         <div class="puzzle-section">
             <div class="canvas-area" style="border: none; padding: 5px;">
@@ -190,20 +210,22 @@
     </div>
 
     <div id="d2" class="content">
-        <div class="panel">
-            <h3>Worksheet: Theorem 2</h3>
-            <p style="font-size: 0.8rem; color: #64748b;">Relate Adjacent Side (AB) to Opposite Side (AC).</p>
-            <label>Angle B: <span id="d2-angle-val">30</span>°</label>
-            <input type="range" id="d2-angle" min="15" max="75" value="30">
-            <label>Adjacent AB: <span id="d2-ab-val">200</span></label>
-            <input type="range" id="d2-ab" min="100" max="300" value="200">
-            <div class="data-grid">
-                <div class="data-card"><div class="data-label">tan(B)</div><div class="data-value" id="v2-tan">0.577</div></div>
-                <div class="data-card"><div class="data-label">cot(B)</div><div class="data-value" id="v2-cot">1.732</div></div>
-                <div class="data-card" style="border-color: var(--success);"><div class="data-label">AB · tan(B)</div><div class="data-value" id="v2-abt">115.5</div></div>
-                <div class="data-card" style="border-color: var(--success);"><div class="data-label">AC · cot(B)</div><div class="data-value" id="v2-act">200.0</div></div>
-                <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AC (Opp)</div><div class="data-value" id="v2-ac">115.5</div></div>
-                <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AB (Adj)</div><div class="data-value" id="v2-ab">200.0</div></div>
+        <div class="sidebar-column">
+            <div class="panel">
+                <h3>Worksheet: Theorem 2</h3>
+                <p style="font-size: 0.8rem; color: #64748b;">Relate Adjacent Side (AB) to Opposite Side (AC).</p>
+                <label>Angle B: <span id="d2-angle-val">30</span>°</label>
+                <input type="range" id="d2-angle" min="15" max="75" value="30">
+                <label>Adjacent AB: <span id="d2-ab-val">200</span></label>
+                <input type="range" id="d2-ab" min="100" max="300" value="200">
+                <div class="data-grid">
+                    <div class="data-card"><div class="data-label">tan(B)</div><div class="data-value" id="v2-tan">0.577</div></div>
+                    <div class="data-card"><div class="data-label">cot(B)</div><div class="data-value" id="v2-cot">1.732</div></div>
+                    <div class="data-card" style="border-color: var(--success);"><div class="data-label">AB · tan(B)</div><div class="data-value" id="v2-abt">115.5</div></div>
+                    <div class="data-card" style="border-color: var(--success);"><div class="data-label">AC · cot(B)</div><div class="data-value" id="v2-act">200.0</div></div>
+                    <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AC (Opp)</div><div class="data-value" id="v2-ac">115.5</div></div>
+                    <div class="data-card" style="border-color: var(--accent);"><div class="data-label">Side AB (Adj)</div><div class="data-value" id="v2-ab">200.0</div></div>
+                </div>
             </div>
         </div>
         <div class="canvas-area">
@@ -214,17 +236,19 @@
     </div>
 
     <div id="p2" class="content">
-        <div class="panel">
-            <h3>Item Bank (Th.2)</h3>
-            <div class="item-bank">
-                <div class="draggable-item" onclick="fillBox('AB')">AB</div>
-                <div class="draggable-item" onclick="fillBox('AC')">AC</div>
-                <div class="draggable-item" onclick="fillBox('BC')">BC</div>
-                <div class="draggable-item" onclick="fillBox('tan(B)')">tan(B)</div>
-                <div class="draggable-item" onclick="fillBox('cot(B)')">cot(B)</div>
+        <div class="sidebar-column">
+            <div class="panel">
+                <h3>Item Bank (Th.2)</h3>
+                <div class="item-bank">
+                    <div class="draggable-item" onclick="fillBox('AB')">AB</div>
+                    <div class="draggable-item" onclick="fillBox('AC')">AC</div>
+                    <div class="draggable-item" onclick="fillBox('BC')">BC</div>
+                    <div class="draggable-item" onclick="fillBox('tan(B)')">tan(B)</div>
+                    <div class="draggable-item" onclick="fillBox('cot(B)')">cot(B)</div>
+                </div>
+                <button class="check-btn" onclick="checkPuzzle(2)">Check Theorem 2</button>
+                <p id="f2" style="font-weight: bold; margin-top: 10px; text-align: center;"></p>
             </div>
-            <button class="check-btn" onclick="checkPuzzle(2)">Check Theorem 2</button>
-            <p id="f2" style="font-weight: bold; margin-top: 10px; text-align: center;"></p>
         </div>
         <div class="puzzle-section">
             <div class="canvas-area" style="border: none; padding: 5px;">
