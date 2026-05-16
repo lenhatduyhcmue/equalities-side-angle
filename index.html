@@ -14,9 +14,22 @@
         .tab-btn.active { background: white; color: var(--primary); border-bottom: 3px solid var(--primary); }
         
         .content { padding: 20px; display: none; }
-        .content.active { display: grid; grid-template-columns: 380px 1fr; gap: 20px; align-items: start; }
+        /* Thay đổi từ align-items: start sang stretch để cột chứa panel có thể kéo dài dọc theo trang */
+        .content.active { display: grid; grid-template-columns: 380px 1fr; gap: 20px; align-items: stretch; }
 
+        /* Tối ưu hóa panel để kích hoạt tính năng chạy theo màn hình (Sticky) */
         .panel { background: #f1f5f9; padding: 20px; border-radius: 0.75rem; display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; }
+        
+        @media (min-width: 769px) {
+            .panel {
+                position: -webkit-sticky; /* Hỗ trợ trình duyệt Safari */
+                position: sticky;
+                top: 20px; /* Khoảng cách cách mép trên màn hình khi cuộn */
+                max-height: calc(100vh - 40px); /* Giới hạn chiều cao bằng màn hình để tránh bị khuất */
+                overflow-y: auto; /* Tự động thêm thanh cuộn nội bộ nếu danh sách từ quá dài */
+                z-index: 10;
+            }
+        }
         
         .canvas-area { background: #fff; border: 2px dashed #cbd5e1; border-radius: 0.75rem; padding: 15px; text-align: center; box-sizing: border-box; }
         .canvas-container { display: inline-block; width: 100%; max-width: 650px; margin: 0 auto; vertical-align: middle; }
