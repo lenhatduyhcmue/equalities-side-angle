@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bilingual Math: Geometric Relations Discovery (Auto-Scale)</title>
+    <title>Bilingual Math: Geometric Relations Discovery (Fixed Bounds Scale)</title>
     <style>
         :root { --primary: #2563eb; --success: #10b981; --accent: #f59e0b; --bg: #f8fafc; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #1e293b; }
@@ -183,22 +183,35 @@
         const a = parseInt(document.getElementById('d1-angle').value), bc = parseInt(document.getElementById('d1-bc').value);
         const rad = a * Math.PI/180, s = Math.sin(rad), c = Math.cos(rad);
         const ac = bc * s, ab = bc * c;
+        
         document.getElementById('d1-angle-val').innerText = a; document.getElementById('d1-bc-val').innerText = bc;
         document.getElementById('v1-sin').innerText = s.toFixed(3); document.getElementById('v1-cos').innerText = c.toFixed(3);
         document.getElementById('v1-bcs').innerText = ac.toFixed(1); document.getElementById('v1-bcc').innerText = ab.toFixed(1);
         document.getElementById('v1-ac').innerText = ac.toFixed(1); document.getElementById('v1-ab').innerText = ab.toFixed(1);
-        drawTriangle('svg-d1', ab, ac, a);
+        
+        // Tính giới hạn lớn nhất ứng với góc hiện tại (khi thanh trượt BC đạt tối đa là 350)
+        const maxBC = 350;
+        const maxAb = maxBC * c;
+        const maxAc = maxBC * s;
+
+        drawTriangle('svg-d1', ab, ac, a, maxAb, maxAc);
     }
 
     function updateD2() {
         const a = parseInt(document.getElementById('d2-angle').value), ab = parseInt(document.getElementById('d2-ab').value);
         const rad = a * Math.PI/180, t = Math.tan(rad);
         const ac = ab * t;
+        
         document.getElementById('d2-angle-val').innerText = a; document.getElementById('d2-ab-val').innerText = ab;
         document.getElementById('v2-tan').innerText = t.toFixed(3); document.getElementById('v2-cot').innerText = (1/t).toFixed(3);
         document.getElementById('v2-abt').innerText = ac.toFixed(1); document.getElementById('v2-act').innerText = ab.toFixed(1);
         document.getElementById('v2-ac').innerText = ac.toFixed(1); document.getElementById('v2-ab').innerText = ab.toFixed(1);
-        drawTriangle('svg-d2', ab, ac, a);
+        
+        // Tính giới hạn lớn nhất ứng với góc hiện tại (khi thanh trượt AB đạt tối đa là 300)
+        const maxAB = 300;
+        const maxAc = maxAB * t;
+
+        drawTriangle('svg-d2', ab, ac, a, maxAB, maxAc);
     }
 
     function selectBox(id) {
@@ -230,30 +243,31 @@
         f.style.color = correct ? "var(--success)" : "var(--accent)";
     }
 
-    /* THUẬT TOÁN TỰ ĐỘNG CO GIÃN ĐỒNG DẠNG (AUTO-SCALE) */
-    function drawTriangle(id, ab, ac, alpha) {
+    /* THUẬT TOÁN CO GIÃN ĐỘNG THEO TRẦN GIỚI HẠN (BOUNDS-BASED SCALE) */
+    function drawTriangle(id, ab, ac, alpha, maxAb, maxAc) {
         const svg = document.getElementById(id); if(!svg) return; svg.innerHTML = '';
         
-        // Đọc kích thước vùng viewBox của thẻ SVG hiện tại
         const viewBox = svg.getAttribute("viewBox").split(" ");
         const svgW = parseFloat(viewBox[2]);
         const svgH = parseFloat(viewBox[3]);
         
-        // Thiết lập vùng đệm an toàn xung quanh khung vẽ
         const padLeft = 50, padRight = 40, padTop = 40, padBottom = 50;
         const maxW = svgW - padLeft - padRight;
         const maxH = svgH - padTop - padBottom;
         
-        // Tính toán hệ số phóng thu để tam giác vừa khít chiều rộng hoặc chiều cao nhỏ nhất
-        const scaleX = maxW / ab;
-        const scaleY = maxH / ac;
+        // Nếu truyền vào giá trị cực đại (Tab 1, Tab 3), dùng nó để chốt khung cố định cho góc đó
+        // Nếu không truyền (Tab 2, Tab 4 hình tĩnh), dùng luôn giá trị hiện tại
+        const baseAb = maxAb || ab;
+        const baseAc = maxAc || ac;
+        
+        const scaleX = maxW / baseAb;
+        const scaleY = maxH / baseAc;
         const scale = Math.min(scaleX, scaleY);
         
-        // Kích thước điểm ảnh thực tế sau thu phóng
+        // Kích thước hiển thị thực tế co giãn dựa trên thanh trượt hiện hành
         const drawAB = ab * scale;
         const drawAC = ac * scale;
         
-        // Tọa độ 3 đỉnh động hình học vuông tại A
         const B = { x: padLeft, y: svgH - padBottom };
         const A = { x: B.x + drawAB, y: B.y };
         const C = { x: A.x, y: B.y - drawAC };
@@ -265,7 +279,6 @@
         };
         drawLine(B,A,"#334155"); drawLine(A,C,"#10b981"); drawLine(B,C,"#ef4444");
         
-        // Vẽ ký hiệu góc vuông thích ứng kích thước
         const raSize = Math.min(15, drawAB * 0.2, drawAC * 0.2);
         if (raSize > 3) {
             const ra = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
@@ -273,7 +286,6 @@
             ra.setAttribute("fill","none"); ra.setAttribute("stroke","#94a3b8"); svg.appendChild(ra);
         }
 
-        // Vẽ cung tròn góc nhọn nhãn B thích ứng kích thước
         const arcR = Math.min(30, drawAB * 0.4, drawAC * 0.4);
         if (arcR > 5) {
             const rad = alpha * Math.PI/180;
